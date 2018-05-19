@@ -1,4 +1,4 @@
-window.onload=function(){
+ window.onload=function(){
 
 //websocket
   var websocket=new WebSocket("ws://localhost:3000/");
@@ -28,45 +28,19 @@ window.onload=function(){
   }
 
 
-
-//设备开启
-  document.getElementById('deviceOpen').addEventListener('click',function(){
-   var data={
-      device:0
-   };
-   console.log(data);
-    data=JSON.stringify(data);
-    websocket.send(data);
-
- })
-
-//设备关闭
-  document.getElementById('deviceClose').addEventListener('click',function(){
-   var data={
-      device:1
-   };
-   console.log(data);
-   data=JSON.stringify(data);
-   websocket.send(data);
-
- })
+// 事件绑定函数
+function addEvent(element, eType, handler, bol) {
+    if(element.addEventListener){           //如果支持addEventListener
+        element.addEventListener(eType, handler,bol);
+    }else if(element.attachEvent){          //如果支持attachEvent
+        element.attachEvent("on"+eType, handler);
+    }else{                                  //否则使用兼容的onclick绑定
+        element["on"+eType] = handler;
+    }
+}
 
 
- //退出系统
- document.getElementById('exit').addEventListener('click', function(){
-   if(websocket){
-     websocket.close();//关闭websocket
-   }
-
- })
-
-//左边led控制监听（事件代理）
- document.getElementById("formLeft").addEventListener("click",formLeftClickHandle,false); 
- //数码管设置监听
- document.getElementById("digitalTubeWrite").addEventListener("click",digitalTubeWriteClickHandle,false); 
-
-
-/*需要发送的数据,这个全部数据的展示，我们实际并不用
+/*需要发送的数据,这个全部数据的展示，我们实际并不用这么多
 var data={
  device:0,   //开关设备 0-开 1-关 
  operation:0,   //操作书 0-6
@@ -74,6 +48,52 @@ var data={
  ledTime:'30',  //led时间间隔 >30ms 需要根据实际情况调整
  digitalTubeNum:'0000', //数码管显示数字 0000-fffF
 };*/
+
+
+
+//设备开启
+var deviceOpen=document.getElementById('deviceOpen');
+addEvent(deviceOpen,'click',function(){
+   var data={
+      device:0
+   };
+   console.log(data);
+   data=JSON.stringify(data);
+   websocket.send(data);
+
+ },false);
+
+
+
+//设备关闭
+var deviceClose= document.getElementById('deviceClose');
+addEvent(deviceClose,'click',function(){
+   var data={
+      device:1
+   };
+   console.log(data);
+   data=JSON.stringify(data);
+   websocket.send(data);
+
+ },false);
+
+
+ //退出系统
+var exit=document.getElementById('exit');
+addEvent(exit,'click', function(){
+   if(websocket){
+     websocket.close();//关闭websocket
+   }
+
+ },false);
+
+
+//左边led控制监听（事件代理）
+ var formLeft=document.getElementById("formLeft");
+ addEvent(formLeft,"click",formLeftClickHandle,false); 
+ //数码管设置监听
+ var digitalTubeWrite=document.getElementById("digitalTubeWrite");
+ addEvent(digitalTubeWrite,"click",digitalTubeWriteClickHandle,false); 
 
 
 /*左边菜单事件回调函数
