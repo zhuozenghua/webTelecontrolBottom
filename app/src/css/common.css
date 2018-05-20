@@ -1,0 +1,30 @@
+.btn-md{
+  background-color:#f5f5f5;
+  padding:6px 8px;
+  text-align: center;
+  font-size:16px;
+  font-family: "Microsoft Yahei",微软雅黑;
+  color:#333;
+  border:2px solid rgba(210,210,210,0.5);
+  border-radius:8px;
+  margin-right: 8px;
+}
+
+.btn-md:hover{
+   background-color:rgba(230,230,230,0.8);
+}
+
+.btn-small{
+  background-color:#f5f5f5;
+  padding:6px 8px;
+  text-align: center;
+  font-size:14px;
+  font-family: "Microsoft Yahei",微软雅黑;
+  color:#333;
+  border:2px solid rgba(210,210,210,0.5);
+  border-radius:6px;
+}
+
+.btn-small:hover{
+  background-color:rgba(230,230,230,0.8);
+}

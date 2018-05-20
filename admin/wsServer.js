@@ -4,7 +4,7 @@
 /*1.这里是单进程*/
 /*var ws = require("nodejs-websocket")
 
-var PORT=3000;
+var PORT=8000;
 
 
 var message={}; 
@@ -42,7 +42,7 @@ var server = ws.createServer(function (conn) {
 }).listen(PORT);
 
 
-console.log('websocket server listen in 3000 port');
+console.log('websocket server listen in 8000 port');
 */
 
 
@@ -51,7 +51,7 @@ console.log('websocket server listen in 3000 port');
 var ws = require("nodejs-websocket")
 var cluster = require('cluster');
 var cpuCount = require('os').cpus().length;
-var PORT=3000;
+var PORT=8000;
 
 if (cluster.isMaster) {
     for (var i = 0; i < cpuCount; ++i) {
@@ -92,6 +92,6 @@ var server = ws.createServer(function (conn) {
   })
 
 }).listen(PORT);
- console.log(`websocket server(${process.pid}) listen in 3000 port`);
+ console.log(`websocket server(${process.pid}) listen in 8000 port`);
 
 }

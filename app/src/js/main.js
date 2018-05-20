@@ -1,7 +1,7 @@
  window.onload=function(){
 
 //websocket
-  var websocket=new WebSocket("ws://localhost:3000/");
+  var websocket=new WebSocket("ws://localhost:8000/");
 
   websocket.onopen=function(e){
     console.log('websocket open!!!');
