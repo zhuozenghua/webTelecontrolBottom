@@ -1,6 +1,7 @@
 # web远程控制led数码管状态项目
 
 ## web前端-app目录
+![operation.gif](https://github.com/zhuozenghua/webTelecontrolBottom/blob/master/view/op.gif)
 
 ### 前提你已经安装了npm/cnpm node
 
