@@ -1,132 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-         <link rel="stylesheet" href="css/all.min.css">
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/all.min.css">
 
-        <link rel="shortcut icon" href="images/favicon.ico"> 
-    </head>
-    <body>
+    <link rel="shortcut icon" href="images/favicon.ico">
 
-    <!-- 头部 -->
-    <div class="top">
-    			<!-- logo -->
-    			<div class="top-logo"><img src="images/logo.png" height="55" width="220" alt="logo.png">
-          </div>
-    			<!-- 导航 -->
-    			<div class="nav">
-    				<ul>
-    					<li><a href="javascript:;">首页</a></li>
-    					<li><a href="javascript:;">实验室建设</a></li>
-    					<li><a href="javascript:;">物联网行业定制</a></li>
-    					<li><a href="javascript:;">智能硬件</a></li>
-    					<li><a href="javascript:;">服务支持</a></li>
-    					<li><a href="javascript:;">社区</a></li>
-    				</ul>
-    			</div>
-    </div>
+    <script src="js/main.min.js"></script>
 
-		<!-- 内容实体 -->
-			<div class="box">
-				<!-- 头部 -->
-				<div class="box-top">
-					<h4>智能硬件</h4>
-					<a href="javascript:;">查看全部</a>
-				</div>
-				<!-- 内容 -->
-				<div class="con">
-					<!-- 左边 -->
-					<div class="left">
-						<img src="images/creat02.jpg" height="614" width="234" alt="creat02.jpg">
-					</div>
-					<!-- 右边 -->
-					<div class="right">
-					  <div class="rigth-wrap">
-                        <div class="right-top">
-                        <div class="right-top-wrap">
-                          <a href="javascript:;" class="btn-md" id="deviceOpen">打开设备</a>
-                          <a href="javascript:;" class="btn-md" id="deviceClose">关闭设备</a>
-                          <a href="javascript:;" class="btn-md" id="exit">退出系统</a>
-                        </div>
-                        </div>
-                        <div class="right-con">
-                           <div class="form-left" id="formLeft">
-                            <!-- <form action=""> -->
-                              <table class="gridtable">
-                                  <tr><th colspan="5">LED控制操作</th></tr>
-                                  <tr>
-                                       <td><input type="radio" name="led" id="led1">L1 </td>
-                                       <td><input type="radio" name="led" id="led2">L2 </td>
-                                       <td><input type="radio" name="led" id="led3">L3 </td>
-                                       <td><input type="radio" name="led" id="led4">L4 </td>
-                                   </tr> 
-                                   <tr>
-                                       <td><input type="radio" name="led" id="led5">L5 </td>
-                                       <td><input type="radio" name="led" id="led6">L6 </td>
-                                       <td><input type="radio" name="led" id="led7">L7 </td>
-                                       <td><input type="radio" name="led" id="led8">L8 </td>
-                                   </tr>                                   
-                                    <tr>
-                                       <td><a href="javascript:;" class="btn-small" id="leftShift">左&nbsp&nbsp移</a></td>
-                                       <td><a href="javascript:;" class="btn-small" id="rightShift">右&nbsp&nbsp移</a></td>
-                                       <td><a href="javascript:;" class="btn-small" id="cycShift">循环移</a></td>
-                                       <td><a href="javascript:;" class="btn-small" id="ledStop">停&nbsp&nbsp止</a></td>
+</head>
+<body>
+<div id="particles">
+  <canvas class="particles-js-canvas-el" style="width: 100%; height: 100%;"></canvas>
+</div>
+<script>particlesJS.load('particles');</script>
 
-                                   </tr>                                     
-                                   <tr>
-                                       <td colspan="3">时间间隔&nbsp&nbsp&nbsp&nbsp<input type="text" class="input-md" id="time"/>ms</td>
-                                       <td><a  style="margin-left:-26px;" href="javascript:;" class="btn-small" id="timeSet">设置时间</a></td>
-                                   </tr> 
-                              </table>
-                            <!-- </form> -->
-                          </div>
-                          <div class="form-right" id="formRight">
-                            <!-- <form action=""> -->
-                              <table class="gridtable">
-                                  <tr><th colspan="5">LED实时状态</th></tr>
-                                  <tr>
-                                       <td colspan="5" id="light">
-                                         <a href="javascript:;" class="led-unlight" ></a>
-                                         <a href="javascript:;" class="led-unlight"></a>
-                                         <a href="javascript:;" class="led-unlight"></a>
-                                         <a href="javascript:;" class="led-unlight"></a>
-                                         <a href="javascript:;" class="led-unlight"></a>
-                                         <a href="javascript:;" class="led-unlight"></a>
-                                         <a href="javascript:;" class="led-unlight"></a>
-                                         <a href="javascript:;" class="led-unlight"></a>
-
-                                       </td>
-                                   </tr> 
-                                   <tr><th colspan="5">七段数码管控制</th></tr>
-                                   <tr>
-                                      <td><a href="javascript:;" class="btn-small" id="digitalTubeWrite">写操作</a></td>
-                                      <td colspan="4">七段数码管&nbsp&nbsp&nbsp&nbsp
-                                      <input type="text" class="input-md" name="digitalTubeNum" id="digitalTubeNum"value="2468" ></td>
-                                   </tr>                                   
-                              </table>
-                            <!-- </form>  -->
-                        </div>
+<!-- 内容实体 -->
+<div class="box">
+	<!-- 内容 -->
+	<div class="con">
+   <!-- 右边 -->
+    <div class="right">
+      <div class="rigth-wrap">
+                  <div class="right-top">
+                  <div class="right-top-wrap">
+                    <a href="javascript:;" class="btn-md" id="deviceOpen">打开设备</a>
+                    <a href="javascript:;" class="btn-md" id="deviceClose">关闭设备</a>
                   </div>
-					</div>
-				</div>
-			</div>
+                  </div>
+                  <div class="right-con">
+                     <div class="form-left" id="formLeft">
+                      <!-- <form action=""> -->
+                        <table class="gridtable">
+                            <tr><th colspan="5">LED控制操作</th></tr>
+                            <tr>
+
+                                 <td><a href="javascript:;" class="led-unlight" id="led1"></a></td>
+                                 <td><a href="javascript:;" class="led-unlight" id="led2"></a></td>
+                                 <td><a href="javascript:;" class="btn-small" id="rightShift">右&nbsp&nbsp移</a></td>
+                                 <td><a href="javascript:;" class="btn-small" id="cycRightShift">顺时针循环</a></td>
+
+                             </tr>                                 
+                              <tr>
+                                 <td><a href="javascript:;" class="led-unlight" id="led3"></a></td>
+                                 <td><a href="javascript:;" class="led-unlight" id="led4"></a></td>
+                                 <td><a href="javascript:;" class="btn-small" id="leftShift">左&nbsp&nbsp移</a></td>
+                                 <td><a href="javascript:;" class="btn-small" id="cycLeftShift">逆时针循环</a></td>
+
+                             </tr>                                     
+                             <tr>
+                                 <td colspan="3">时间间隔&nbsp&nbsp&nbsp&nbsp<input type="text" class="input-md" id="time" value="500"/>ms</td>
+                                 <td><a href="javascript:;" class="btn-small" id="stop">停止</a></td>
+                             </tr> 
+                             <tr style="visibility:collapse" id="errorTip1">
+                               <td></td>
+                               <td colspan="3">请输入一个大于500的数字</td>
+                             </tr>
+                        </table>
+                      <!-- </form> -->
+                    </div>
+                    <div class="form-right" id="formRight">
+                      <!-- <form action=""> -->
+                        <table class="gridtable">
+                             <tr><th colspan="5">七段数码管控制</th></tr>
+                             <tr>
+                                <td><a href="javascript:;" class="btn-small" id="digitalTubeWrite">写操作</a></td>
+                                <td colspan="4">七段数码管&nbsp&nbsp&nbsp&nbsp
+                                <input type="text" class="input-md" name="digitalTubeNum" id="digitalTubeNum" value="0000" ></td>
+                             </tr> 
+                               <tr style="visibility:collapse" id="errorTip2">
+                               <td></td>
+                               <td colspan="3">请输入一个0000-ffff的字符</td>
+                             </tr>                                  
+                        </table>
+                      <!-- </form>  -->
+                  </div>
+            </div>
     </div>
+  </div>
 
-    		<!-- 底部 -->
-    		<div class="footer">
-    			<div class="footer-wrap">
-    				<div class="con">
-    					<div class="font">
-  
-    						<span>广东外语外贸大学 © 2018 GDUFS| 粤ICP备06106464号  </span><br>
-    						<span>报警电话: 110  联系我们 | 网站维护: zzh&dzm</span>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
+		<!-- 左边 -->
+		<div class="left">
+			<img src="images/creat02.jpg" height="615" width="234" alt="creat02.jpg">
+		</div>
 
-    </body>
-<script src="js/main.min.js"></script>
+</div>
+</div>
 
+<!-- 底部 -->
+<div class="footer">
+		<div class="footer-wrap">
+			<div class="con">
+					<span>广东外语外贸大学 © 2018 GDUFS  | 粤ICP备06106464号  </span><br>
+					<span>报警电话: 110  联系我们 | 网站维护: zzh&dzm</span>
+			</div>
+		</div>
+</div>
+</body>
 </html>

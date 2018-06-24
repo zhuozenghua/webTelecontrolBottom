@@ -1,32 +1,5 @@
- window.onload=function(){
-
-//websocket
-  var websocket=new WebSocket("ws://localhost:8000/");
-
-  websocket.onopen=function(e){
-    console.log('websocket open!!!');
-  }
-
-  websocket.onmessage=function(e){
-    console.log(e.data);
-    var data=JSON.parse(e.data);
-    var led=data.res&&typeof (data.res)==='string'?data.res:'0000';
-    var light=document.getElementById('light').getElementsByTagName('a');
-
-    for(var i=0;i<4;i++){
-      light[i].className=led.charAt(i)==='1'?'led-light':'led-unlight';
-    }
-
-  }
-
-  websocket.onclose=function(e){
-     console.log('websocket close!!!');
-  }
-
-  websocket.onerror=function(err){
-     console.log('websocket error!!!'+err);
-  }
-
+//除了ajax 其他都是原生js完成
+window.onload=function(){
 
 // 事件绑定函数
 function addEvent(element, eType, handler, bol) {
@@ -40,26 +13,79 @@ function addEvent(element, eType, handler, bol) {
 }
 
 
-/*需要发送的数据,这个全部数据的展示，我们实际并不用这么多
+/*需要发送的数据,这个全部数据的展示，我们实际并不用每次传输这么多
 var data={
- device:0,   //开关设备 0-开 1-关 
- operation:0,   //操作书 0-6
+ device:0,   //开关设备 1-开 0-关 
+ operation:0,   //操作书 0-3
  led:'0000',    //led 0000
- ledTime:'30',  //led时间间隔 >30ms 需要根据实际情况调整
  digitalTubeNum:'0000', //数码管显示数字 0000-fffF
 };*/
 
+
+//监听时间间隔输入
+var time=document.getElementById('time');
+var t=500;
+addEvent(time,'input',function(){
+    if(/^[0-9]{3,}$/.test(this.value)){
+       t=parseInt(this.value); 
+       if(t>=500){
+        this.style.border="2px solid rgba(80,80,80,0.3)";
+        document.getElementById("errorTip1").style.visibility = 'collapse';
+       }else{
+        this.style.border="2px solid #f30000";
+        document.getElementById("errorTip1").style.visibility = 'visible';
+        t=500;
+       }
+        t=t>=500?t:500;
+     }else{
+        this.style.border="2px solid #f30000";
+        document.getElementById("errorTip1").style.visibility = 'visible';
+        t=500;
+    }
+     // console.log(t);
+},false);
+
+
+var  digitalTubeNum=document.getElementById("digitalTubeNum");
+var  num="0000";
+addEvent(digitalTubeNum,'input',function(){
+      if(/^([0-9]|[a-f]|[A-F]){4}$/g.test(this.value)){
+        num=this.value;
+        this.style.border="2px solid rgba(80,80,80,0.3)";
+        document.getElementById("errorTip2").style.visibility = 'collapse';
+       }else{
+        num="0000";
+        this.style.border="2px solid #f30000";
+        document.getElementById("errorTip2").style.visibility = 'visible';
+       }
+     // console.log(num);
+},false);
 
 
 //设备开启
 var deviceOpen=document.getElementById('deviceOpen');
 addEvent(deviceOpen,'click',function(){
+
    var data={
-      device:0
+      device:1
    };
    console.log(data);
    data=JSON.stringify(data);
-   websocket.send(data);
+
+   $.ajax({
+    url:'../cgi-bin/ctl.sh',
+    type:"post",
+    data:data,
+    contentType:"application/json;charset=utf-8",
+    dataType:"text",
+    success:function(res){
+     res=="0"?console.log("设备开启成功。res:"+res):console.log("设备开启失败。res:"+res);
+    },
+    error:function(){
+      console.log("设备开启失败。");
+    }
+
+   })
 
  },false);
 
@@ -69,23 +95,29 @@ addEvent(deviceOpen,'click',function(){
 var deviceClose= document.getElementById('deviceClose');
 addEvent(deviceClose,'click',function(){
    var data={
-      device:1
+      device:0
    };
    console.log(data);
    data=JSON.stringify(data);
-   websocket.send(data);
+
+    $.ajax({
+    url:'../cgi-bin/ctl.sh',
+    type:"post",
+    data:data,
+    contentType:"application/json;charset=utf-8",
+    dataType:"text",
+    success:function(res){
+      res=="0"?console.log("设备关闭成功。res:"+res):console.log("设备关闭失败。res:"+res);
+    },
+    error:function(){
+        console.log("设备关闭失败。");
+    }
+
+   })
+
 
  },false);
 
-
- //退出系统
-var exit=document.getElementById('exit');
-addEvent(exit,'click', function(){
-   if(websocket){
-     websocket.close();//关闭websocket
-   }
-
- },false);
 
 
 //左边led控制监听（事件代理）
@@ -96,6 +128,8 @@ addEvent(exit,'click', function(){
  addEvent(digitalTubeWrite,"click",digitalTubeWriteClickHandle,false); 
 
 
+
+var interval;
 /*左边菜单事件回调函数
 利用事件委托来实现响应Click事件处理*/
   function formLeftClickHandle(event){
@@ -103,13 +137,15 @@ addEvent(exit,'click', function(){
      var event=event||window.event;
      var target = event.target||event.srcElement;
      // console.log(target.id+' '+target.value+" "+target.checked);
-     var data={
-     operation:0,   //操作书 0-6
-     //led:'0000',    //led 0000
-     // ledTime:'30',  //led时间间隔 >30ms 需要根据实际情况调整
-     };
 
-     var flag=true;
+     //数据
+     var data={
+     operation:1  
+     };
+    //循环点亮标志位
+    var ledTimeFlag=false;   
+    //flag 有效点击位置标志位
+    var flag=true;
     switch(target.id){
         case'led1':   
             data.led="1000";break;
@@ -120,44 +156,112 @@ addEvent(exit,'click', function(){
         case'led4':
             data.led="0001";break;
         case 'leftShift':
-            data.operation=1;break;
-        case 'rightShift':
             data.operation=2;break;
-        case  'cycShift':
+        case 'rightShift':
             data.operation=3;break;
-        case  'ledStop':
-            data.operation=4;break;
-        case  'timeSet':
-            data.operation=5;
-            data.ledTime=document.getElementById('time').value;
-            break;                                
-        default :  //其他我们不发送数据
+        case  'cycLeftShift':
+            data.operation=2,ledTimeFlag=true; 
+            break; 
+        case  'cycRightShift':
+            data.operation=3,ledTimeFlag=true;
+            break;  
+        case 'stop':
+             clearInterval(interval); flag=false;
+             break;                                    
+        default :  //其他点击我们不发送数据
             flag=false;
              break;
     }
+
     if(flag){
+     clearInterval(interval); 
      console.log(data);
-     data=JSON.stringify(data);
-     websocket.send(data);
+     console.log(t);
+     if(ledTimeFlag){
+        data=JSON.stringify(data);
+        interval=setInterval(function(){
+         $.ajax({
+          url:'../cgi-bin/ctl.sh',
+          type:"post",
+          data:data,
+          contentType:"application/json;charset=utf-8",
+          dataType:"text",
+          success:function(res){
+            if(res.charAt(0)=="0"){
+                for(var i=1;i<res.length&&i<=4;i++){
+                  document.getElementById('led'+i).className=res.charAt(i)==='1'?'led-light':'led-unlight';
+                }
+            }else{
+                console.log("led操作失败");
+            }
+
+          },
+          error:function(){
+              console.log("led操作失败");
+          }
+
+         })
+  
+      },t);
+  
+     }else{
+      data=JSON.stringify(data);
+      $.ajax({
+      url:'../cgi-bin/ctl.sh',
+      type:"post",
+      data:data,
+      contentType:"application/json;charset=utf-8",
+      dataType:"text",
+      success:function(res){
+            if(res.charAt(0)=="0"){
+                for(var i=1;i<res.length&&i<=4;i++){
+                  document.getElementById('led'+i).className=res.charAt(i)==='1'?'led-light':'led-unlight';
+                }
+            }else{
+                console.log("led操作失败");
+            }
+      },
+      error:function(){
+          console.log("led操作失败");
+      }
+
+     })
+
     }
+
      event.stopPropagation?event.stopPropagation():event.cancelable=true;
      // event.preventDefault?event.preventDefault():event.returnValue=false;
-  } 
+  }
+} 
 
 /*右边边菜单事件回调函数
 利用事件委托来实现响应Click事件处理*/
 function digitalTubeWriteClickHandle(event){
     // var target =document.getElementById('digitalTubeWriteClickHandle');
-    var digitalTubeNum=document.getElementById('digitalTubeNum');
      var data={
-     operation:6,   
-     digitalTubeNum:digitalTubeNum.value 
+     operation:0,   
+     digitalTubeNum:num
      };
-    console.log(data);
-    data=JSON.stringify(data);
-    websocket.send(data);
-} 
+     console.log(data);
+     data=JSON.stringify(data);
 
+      $.ajax({
+      url:'../cgi-bin/ctl.sh',
+      type:"post",
+      data:data,
+      contentType:"application/json;charset=utf-8",
+      dataType:"text",
+      success:function(res){
+        res=="0"?console.log("数码管操作成功。res:"+res):console.log("数码管操作失败。res:"+res);
+      },
+      error:function(){
+          console.log("数码管操作失败");
+      }
+
+     })
+
+    
+} 
 
 
 }
