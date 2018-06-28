@@ -50,8 +50,25 @@ gulp.task('css', function() {       // 标注一个依赖，依赖的任务必�
 
 
 // 压缩 JS
-gulp.task('js-optimize', function() {
-    return gulp.src('src/js/*.js')
+gulp.task('particlesjs-optimize', function() {
+    return gulp.src(['src/js/particles.js'])
+        // .pipe(sourcemaps.init())
+        .pipe(concat('particles.js'))
+        .pipe(gulp.dest('dist/js/tmp'))
+        .pipe(rename('particles.min.js'))
+        .pipe(uglify())
+        .pipe(rev())
+        // .pipe(sourcemaps.write())
+        .pipe(gulp.dest('dist/js'))
+        .pipe(rev.manifest('rev-manifest1.json',{
+            merge:true
+        }))
+        .pipe(gulp.dest('dist/js'))
+        ;
+});
+
+gulp.task('mainjs-optimize', ['particlesjs-optimize'],function() {
+    return gulp.src(['src/js/jquery.1.10.2.js','src/js/main.js'])
         // .pipe(sourcemaps.init())
         .pipe(concat('main.js'))
         .pipe(gulp.dest('dist/js/tmp'))
@@ -60,7 +77,9 @@ gulp.task('js-optimize', function() {
         .pipe(rev())
         // .pipe(sourcemaps.write())
         .pipe(gulp.dest('dist/js'))
-        .pipe(rev.manifest())
+        .pipe(rev.manifest('rev-manifest2.json',{
+            merge:true
+        }))
         .pipe(gulp.dest('dist/js'))
         ;
 });
@@ -69,10 +88,9 @@ gulp.task('js-optimize', function() {
 
 // 图片压缩
 gulp.task('img', function() {
-
     return gulp.src(['src/images/*.{png,jpg,jpeg,ico,gif,svg}'])
         .pipe(plumber())
-        .pipe(cache(imagemin({      // 只压缩修改的图片，没有修改的图片直接从缓存文件读取
+        .pipe(cache(imagemin('rev-mainfest.json',{      // 只压缩修改的图片，没有修改的图片直接从缓存文件读取
             progressive: true,
             use: [pngquant()]        // 使用 pngquant 深度压缩 png 图片
         })))
@@ -81,19 +99,44 @@ gulp.task('img', function() {
 });
 
 
-//替换tml相关资源路径
-gulp.task('htmlReplace',function(){
+//替换tml相关资源路径，并拷贝index.html
+gulp.task('indexhtmlReplace',function(){
     return gulp.src('src/index.html')
         .pipe(htmlReplace({ //在页面中使用<!-- build:data.js --> <!--endbuild-->   .....
-            'js':'js/main.min.js',
+            'particles_js':'js/particles.min.js',
+            'main_js':'js/main.min.js',
             'css':'css/all.min.css'
         }))
         .pipe(gulp.dest('dist/tmp'));
 })
 
+//拷贝error.html
+gulp.task('errorhtml',function(){
+    var options={
+    //省略空格
+    collapseWhitespace:true,
+    //省略布尔值的属性<input checked="true"/>
+    collapseBooleanAttributes:false,
+    //删除空格值的属性<input id=''/>
+    removeEmptyAttributes:true,
+    //删除<script>的type="text/javascript"
+    // removeScriptTypeAttributes:true,
+    //删除<style>和<link>的type="text/css"
+    // removeStyleLinkTypeAttributes:true,
+    //压缩页面的JS
+    minifyJS:true,
+    //压缩页面的CSS
+    minifyCSS:true
+  };
+
+    return gulp.src('src/error.html')
+        .pipe(gulp.dest('dist/tmp'))
+        .pipe(htmlmin(options))
+        .pipe(gulp.dest('dist/'));
+})
 
 //打上版本号
-gulp.task('revProduct',['htmlReplace'],function(){   
+gulp.task('revProduct',['indexhtmlReplace'],function(){   
     var options={
     //省略空格
     collapseWhitespace:true,
@@ -123,7 +166,7 @@ gulp.task('revProduct',['htmlReplace'],function(){
 //流程说明，cleanDist先执行，然后runSequence里面的任务按顺序执行
 gulp.task('build',['cleanDist'],function(cb){
   condition=false;
-  runSequence(['css'],['js-optimize'],['img'],['htmlReplace'],['revProduct'],cb);
+  runSequence(['css'],['particlesjs-optimize'],['mainjs-optimize'],['img'],['indexhtmlReplace'],['revProduct'],['errorhtml'],cb);
 
 })
 

@@ -1,12 +1,16 @@
 # web远程控制led数码管状态项目
 
 ## web前端-app目录
-![operation.gif](https://github.com/zhuozenghua/webTelecontrolBottom/blob/master/view/op.gif)
+### 首页
+![index.gif](https://github.com/zhuozenghua/webTelecontrolBottom/blob/master/view/index.gif)
+
+### 错误页面
+![error.png](https://github.com/zhuozenghua/webTelecontrolBottom/blob/master/view/error.png)
 
 ### 前提你已经安装了npm/cnpm node
 
 
-## 1.打开网站
+## 1.浏览网站前端
 
 ```
 进入 app目录
@@ -18,9 +22,13 @@ npm install
 打开网站
 gulp serve
 
+
+其他命令
+生产环境构建
+gulp build
+
 ```
 
-## 2.打开控制台，我会打印发送的接口数据和接收的数据
 
 ## web前端结束
 
